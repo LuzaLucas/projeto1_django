@@ -9,12 +9,3 @@ def home(request):
         {'name': 'Lucas',}
     )
 
-
-def sobre(request):
-    return HttpResponse('SOBRE 1')
-
-
-def contato(request):
-    return HttpResponse('CONTATO 1')
-
-
