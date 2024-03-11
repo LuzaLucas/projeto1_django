@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from utils.recipes.factory import make_recipe
 
 
 def home(request):
     return render(
         request,
         'recipes/pages/home.html',
-        {'name': 'Lucas',}
+        {'recipes': [make_recipe() for _ in range(10)],}
     )
 
 
@@ -14,6 +15,6 @@ def recipe(request, id):
     return render(
         request,
         'recipes/pages/recipe-view.html',
-        {'name': 'Lucas',}
+        {'recipe': make_recipe(), 'is_detail_page': True,}
     )
 
