@@ -30,20 +30,33 @@ class RecipeViewsTest(RecipeTestBase):
     
     @skip('Why am i skiping this test / WIP (work in progress)')
     def test_recipe_home_template_loads_recipes(self):
+        #need a recipe for this test
         self.make_recipe(category_data={
             'name': 'breakfast'
         })
+        
         response = self.client.get(reverse('recipes:home'))
         content = response.content.decode('utf-8')
         response_context_recipes = response.context['recipes']
         
-        self.assertIn('Recipe Title', content)
-        self.assertIn('5 porções', content)
+        # checks if one recipe exists
         self.assertIn('breakfast', content)
         self.assertEqual(len(response_context_recipes), 1)
         
         # got to write more stuff here
         self.fail('Finish testing stuff')
+        
+        
+    def test_recipe_home_template_dont_load_recipes_not_published(self):
+        """Test if recipe is_published False = don't show"""
+        # need a recipe for this test
+        self.make_recipe(is_published=False)
+        
+        response = self.client.get(reverse('recipes:home'))
+        
+        # checks if one recipe exists
+        self.assertIn('<h1>No recipes found here.</h1>', 
+            response.content.decode('utf-8'))
         
         
     # category
@@ -57,6 +70,17 @@ class RecipeViewsTest(RecipeTestBase):
         
         # checking if one recipe exists
         self.assertIn(needed_title, content)
+        
+        
+    def test_recipe_category_template_dont_load_recipes_not_published(self):
+        """Test if recipe is_published False = don't show"""
+        recipe = self.make_recipe(is_published=False)
+        
+        # need a recipe for this test
+        response = self.client.get(
+            reverse('recipes:recipe', kwargs={'id': recipe.category.id})) # type: ignore
+        
+        self.assertEqual(response.status_code, 404)
         
         
     def test_recipe_category_view_function_is_correct(self):
