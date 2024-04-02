@@ -46,13 +46,15 @@ class RegisterForm(forms.ModelForm):
             'Password must have at least one uppercase letter, one lowercase '
             'letter and one number. The length should be at least 8 characters.'
         ),
-        validators=[strong_password]
+        validators=[strong_password],
+        label='Password'
     )
     password2 = forms.CharField(
         required=True,
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Repeat your password here'
-        })
+        }),
+        label='Password2'
     )
     
     class Meta:
@@ -89,32 +91,20 @@ class RegisterForm(forms.ModelForm):
                 'placeholder': 'Type your password here',
             })
         }
-        
-        
-    def clean_password(self):
-        data = self.cleaned_data.get('password')
-        
-        if 'atenção' in data: #type: ignore
-            raise ValidationError(
-                'Não digite %(value)s no campo password',
-                code='invalid',
-                params={ 'value': '"atenção"' }
-            )
-        
-        return data
     
     
-    def clean_first_name(self): 
-        data = self.cleaned_data.get('first_name')
+    # example
+    # def clean_first_name(self): 
+    #     data = self.cleaned_data.get('first_name')
         
-        if 'John Doe' in data: #type: ignore
-            raise ValidationError(
-                'Não digite %(value)s no campo first name',
-                code='invalid',
-                params={ 'value': '"John Doe"' }
-            )
+    #     if 'John Doe' in data: #type: ignore
+    #         raise ValidationError(
+    #             'Dont type %(value)s on the first name field',
+    #             code='invalid',
+    #             params={ 'value': '"John Doe"' }
+    #         )
         
-        return data
+    #     return data
     
     
     def clean(self) -> dict[str, Any]: #type: ignore
