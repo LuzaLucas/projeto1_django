@@ -94,7 +94,6 @@ class RegisterForm(forms.ModelForm):
             'username',
             'email',
             'password',
-            'password2',
         ]
         widgets = {
             'first_name': forms.TextInput(attrs={
@@ -105,6 +104,16 @@ class RegisterForm(forms.ModelForm):
                 'placeholder': 'Type your password here',
             })
         }
+    
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '')
+        exists = User.objects.filter(email=email).exists()
+        
+        if exists:
+            raise ValidationError('User email is already in use', code='invalid',)
+        
+        return email
     
     
     def clean(self) -> dict[str, Any]: #type: ignore
