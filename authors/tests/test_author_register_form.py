@@ -7,23 +7,26 @@ from django.urls import reverse
 
 class AuthorRegisterFormUnitTest(TestCase):
     @parameterized.expand([
-        ('first_name', 'Type your first name here :)'),
-        ('last_name', 'Your Last name goes here :)'),
-        ('username', 'Your Username goes here :)'),
-        ('email', 'Your Email goes here :)'),
+        ('first_name', 'Type your first name here'),
+        ('last_name', 'Your Last name goes here'),
+        ('username', 'Your Username goes here'),
+        ('email', 'Your Email goes here'),
         ('password', 'Your password'),
         ('password2', 'Repeat your password here'),
     ])
     def test_fields_placeholder(self, field, placeholder):
         form = RegisterForm()
-        current_placeholder = form[field].field.widget.attrs['placeholder']
-        self.assertEqual(current_placeholder, placeholder)
+        field_widget = form[field].field.widget
+        current_placeholder = field_widget.attrs.get('placeholder')
+        self.assertEqual(current_placeholder, placeholder) 
         
 
     @parameterized.expand([
         ('email', 'The email must be valid'),
         ('password', 'Password must have at least one uppercase letter, one lowercase '
             'letter and one number. The length should be at least 8 characters.'),
+        ('username', 'Username must have letters, number or some of those @/./+/=/_. '
+            'The length should be between 4 and 150 characters.'),
     ])
     def test_fields_help_text(self, field, needed):
         form = RegisterForm()
@@ -69,5 +72,50 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         self.form_data[field] = ''
         url = reverse('authors:create')
         response = self.client.post(url, data=self.form_data, follow=True)
-        # self.assertIn(msg, response.content.decode('utf-8'))
+        
+        self.assertIn(msg, response.content.decode('utf-8'))
         self.assertIn(msg, response.context['form'].errors.get(field))
+        
+        
+    def test_username_field_min_length_should_be_150(self):
+        self.form_data['username'] = 'a' * 151
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+        
+        # msg = 'Username must have at leaset 4 characters'
+        msg = 'Username must have less than 151 characters'
+        self.assertIn(msg, response.content.decode('utf-8'))
+        self.assertIn(msg, response.context['form'].errors.get('username'))
+        
+        
+    def test_password_field_have_lower_upper_case_letters_and_numbers(self):
+        self.form_data['password'] = 'abc123'
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+        
+        msg = ('Password must have at least one uppercase letter, one lowercase '
+            'letter and one number. The length should be at least 8 characters.')
+        
+        self.assertIn(msg, response.context['form'].errors.get('password'))
+        self.assertIn(msg, response.content.decode('utf-8'))
+        
+        
+    def test_password_and_password_confirmation_are_equal(self):
+        self.form_data['password'] = '@A123abc123'
+        self.form_data['password2'] = '@A123abc1235'
+
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+
+        msg = 'Password and password 2 must match'
+
+        self.assertIn(msg, response.context['form'].errors.get('password'))
+        self.assertIn(msg, response.content.decode('utf-8'))
+
+        self.form_data['password'] = '@A123abc123'
+        self.form_data['password2'] = '@A123abc123'
+
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+
+        self.assertNotIn(msg, response.content.decode('utf-8'))
