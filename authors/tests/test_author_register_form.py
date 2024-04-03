@@ -7,9 +7,9 @@ from django.urls import reverse
 
 class AuthorRegisterFormUnitTest(TestCase):
     @parameterized.expand([
-        ('first_name', 'Type your first name here'),
-        ('last_name', 'Your Last name goes here'),
         ('username', 'Your Username goes here'),
+        ('first_name', 'Your first name goes here'),
+        ('last_name', 'Your Last name goes here'),
         ('email', 'Your Email goes here'),
         ('password', 'Your password'),
         ('password2', 'Repeat your password here'),
@@ -119,3 +119,9 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         response = self.client.post(url, data=self.form_data, follow=True)
 
         self.assertNotIn(msg, response.content.decode('utf-8'))
+        
+        
+    def test_send_get_request_to_registration_create_view_returns_404(self):
+        url = reverse('authors:create')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)

@@ -31,6 +31,7 @@ class RegisterForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         add_attr(self.fields['username'],'placeholder', 'Your Username goes here')
         add_attr(self.fields['email'],'placeholder', 'Your Email goes here')
+        add_attr(self.fields['first_name'],'placeholder', 'Your first name goes here')
         add_attr(self.fields['last_name'],'placeholder', 'Your Last name goes here')
         add_attr(self.fields['username'], 'css', 'a-css-class')
     
@@ -104,20 +105,6 @@ class RegisterForm(forms.ModelForm):
                 'placeholder': 'Type your password here',
             })
         }
-    
-    
-    # example
-    # def clean_first_name(self): 
-    #     data = self.cleaned_data.get('first_name')
-        
-    #     if 'John Doe' in data: #type: ignore
-    #         raise ValidationError(
-    #             'Dont type %(value)s on the first name field',
-    #             code='invalid',
-    #             params={ 'value': '"John Doe"' }
-    #         )
-        
-    #     return data
     
     
     def clean(self) -> dict[str, Any]: #type: ignore
