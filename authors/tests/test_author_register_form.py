@@ -7,10 +7,10 @@ from django.urls import reverse
 
 class AuthorRegisterFormUnitTest(TestCase):
     @parameterized.expand([
-        ('username', 'Your Username goes here'),
+        ('username', 'Your username goes here'),
         ('first_name', 'Your first name goes here'),
-        ('last_name', 'Your Last name goes here'),
-        ('email', 'Your Email goes here'),
+        ('last_name', 'Your last name goes here'),
+        ('email', 'Your email goes here'),
         ('password', 'Your password'),
         ('password2', 'Repeat your password here'),
     ])

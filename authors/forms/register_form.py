@@ -8,10 +8,10 @@ from utils.django_forms import add_attr, strong_password
 class RegisterForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        add_attr(self.fields['username'],'placeholder', 'Your Username goes here')
-        add_attr(self.fields['email'],'placeholder', 'Your Email goes here')
+        add_attr(self.fields['username'],'placeholder', 'Your username goes here')
+        add_attr(self.fields['email'],'placeholder', 'Your email goes here')
         add_attr(self.fields['first_name'],'placeholder', 'Your first name goes here')
-        add_attr(self.fields['last_name'],'placeholder', 'Your Last name goes here')
+        add_attr(self.fields['last_name'],'placeholder', 'Your last name goes here')
         add_attr(self.fields['username'], 'css', 'a-css-class')
     
     username = forms.CharField(
