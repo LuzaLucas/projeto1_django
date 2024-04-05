@@ -1,13 +1,11 @@
 from .base import AuthorsBaseTest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+import pytest
 
 
+@pytest.mark.functional_test
 class AuthorRegisterTest(AuthorsBaseTest):
-    def get_by_placeholder(self, web_element, placeholder):
-        return web_element.find_element(
-            By.XPATH, f'//input[@placeholder="{placeholder}"]')
-        
     def fill_form_dummy_data(self, form):
         fields = form.find_elements(By.TAG_NAME, 'input')
         for field in fields:
@@ -38,7 +36,7 @@ class AuthorRegisterTest(AuthorsBaseTest):
             first_name_field.send_keys(Keys.ENTER)
             
             form = self.get_form()
-            self.sleep(2)
+            self.sleep(1)
             self.assertIn('Write your first name', form.text)
         self.form_field_test_with_callback(callback)
     
@@ -50,7 +48,7 @@ class AuthorRegisterTest(AuthorsBaseTest):
             last_name_field.send_keys(Keys.ENTER)
             
             form = self.get_form()
-            self.sleep(2)
+            self.sleep(1)
             self.assertIn('Write your last name', form.text)
         self.form_field_test_with_callback(callback)
     
@@ -62,7 +60,7 @@ class AuthorRegisterTest(AuthorsBaseTest):
             username_field.send_keys(Keys.ENTER)
             
             form = self.get_form()
-            self.sleep(2)
+            self.sleep(1)
             self.assertIn('This field must not be empty', form.text)
         self.form_field_test_with_callback(callback)
     
@@ -74,7 +72,7 @@ class AuthorRegisterTest(AuthorsBaseTest):
             email_field.send_keys(Keys.ENTER)
             
             form = self.get_form()
-            self.sleep(2)
+            self.sleep(1)
             self.assertIn('The email must be valid', form.text)
         self.form_field_test_with_callback(callback)
     
@@ -88,7 +86,7 @@ class AuthorRegisterTest(AuthorsBaseTest):
             password2.send_keys(Keys.ENTER)
             
             form = self.get_form()
-            self.sleep(2)
+            self.sleep(1)
             self.assertIn('Password and password 2 must match', form.text)
         self.form_field_test_with_callback(callback)
     
@@ -111,6 +109,6 @@ class AuthorRegisterTest(AuthorsBaseTest):
             self.browser.find_element(By.TAG_NAME, 'body').text
         )
         
-        self.sleep(2)
+        self.sleep(1)
         
     
