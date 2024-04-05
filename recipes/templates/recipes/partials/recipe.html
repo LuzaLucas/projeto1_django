@@ -3,10 +3,11 @@
     <a href="{% url "recipes:recipe" recipe.id %}">
       {% if recipe.cover %}
         <img src="{{ recipe.cover.url }}" alt="Cover Image">
-      {% else %}
-        <p>Sem imagem disponível</p>
+        </a>
+        {% else %}
+        </a>
+      <p>No image available</p>
       {% endif %}
-    </a>
   </div>
 
   <div class="recipe-title-container">

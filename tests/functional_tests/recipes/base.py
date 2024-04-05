@@ -15,5 +15,5 @@ class RecipeBaseFunctionalTest(StaticLiveServerTestCase, RecipeMixin):
         return super().tearDown()
     
     
-    def sleep(self, seconds=1):
+    def sleep(self, seconds=5):
         time.sleep(seconds)
