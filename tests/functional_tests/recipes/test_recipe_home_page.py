@@ -37,7 +37,6 @@ class RecipeHomePageFunctionalTest(RecipeBaseFunctionalTest):
         # Clicks on input and type the search term "Recipe title 1"
         # to find the recipe with this title
         search_input.send_keys(title_needed)
-        self.sleep(2)
         
         search_input.send_keys(Keys.ENTER)
         
@@ -47,8 +46,6 @@ class RecipeHomePageFunctionalTest(RecipeBaseFunctionalTest):
             self.browser.find_element(By.CLASS_NAME, 'main-content-list').text
         )
         
-        self.sleep(3)
-        
         
     @patch('recipes.views.PER_PAGE', new=2)
     def test_recipe_home_page_pagination(self):
@@ -56,7 +53,6 @@ class RecipeHomePageFunctionalTest(RecipeBaseFunctionalTest):
         
         # user opens the page
         self.browser.get(self.live_server_url)
-        self.sleep(1)
         
         # user sees the pagination and click on page 2
         page2 = self.browser.find_element(
@@ -67,5 +63,3 @@ class RecipeHomePageFunctionalTest(RecipeBaseFunctionalTest):
         
         # user sees two new recipes on page 2
         self.assertEqual(len(self.browser.find_elements(By.CLASS_NAME, 'recipe')), 2)
-        
-        self.sleep(2)
