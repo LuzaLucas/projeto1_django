@@ -1,10 +1,11 @@
 {% if request.user.is_authenticated %}
     <div class="login-message">
         You are logged in as {{ request.user.username }}.
+        <a href="{% url "authors:dashboard" %}">Check your recipes</a> or 
         <form class="inline-form" action="{% url "authors:logout" %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="username" value="{{ request.user.username }}">
-            Click <button class="plaintext-button" type="submit">here</button> 
+            click <button class="plaintext-button" type="submit">here</button> 
         </form>to logout.
     </div>
 {% endif %}
