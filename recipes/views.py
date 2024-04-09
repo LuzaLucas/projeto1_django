@@ -3,7 +3,6 @@ from .models import Recipe
 from django.http.response import Http404
 from django.db.models import Q
 from utils.pagination import make_pagination
-from django.contrib import messages
 
 import os
 
@@ -47,6 +46,7 @@ def recipe(request, id):
         {'recipe': recipe, 'is_detail_page': True,}
     )
 
+
 def search(request):
     search_term = request.GET.get('q', '').strip()
 
@@ -70,3 +70,4 @@ def search(request):
         'pagination_range': pagination_range,
         'additional_url_query': f'&q={search_term}',
     })
+    
