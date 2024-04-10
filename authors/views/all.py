@@ -5,9 +5,8 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from recipes.models import Recipe
-
 from authors.forms.recipe_form import AuthorRecipeForm
-from .forms import RegisterForm, LoginForm
+from authors.forms import RegisterForm, LoginForm
 
 
 def register_view(request):
@@ -155,7 +154,9 @@ def dashboard_recipe_create(request):
         recipe.save()
         
         messages.success(request, 'Your recipe has been saved successfully')
-        return redirect(reverse('authors:dashboard_recipe_edit', args=(id,)))
+        return redirect(
+            reverse('authors:dashboard_recipe_edit', args=(recipe.id,))
+        )
     
     return render(
         request, 'authors/pages/dashboard_recipe.html', 
