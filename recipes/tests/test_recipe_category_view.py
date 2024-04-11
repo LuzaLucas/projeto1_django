@@ -23,7 +23,7 @@ class RecipeCategoryViewTest(RecipeTestBase):
         
         # need a recipe for this test
         response = self.client.get(
-            reverse('recipes:recipe', kwargs={'id': recipe.category.id})) # type: ignore
+            reverse('recipes:recipe', kwargs={'pk': recipe.category.id})) # type: ignore
         
         self.assertEqual(response.status_code, 404)
         
