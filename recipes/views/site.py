@@ -1,4 +1,4 @@
-from .models import Recipe
+from ..models import Recipe
 from django.http.response import Http404, HttpResponse as HttpResponse
 from django.db.models import Q, F
 from utils.pagination import make_pagination
