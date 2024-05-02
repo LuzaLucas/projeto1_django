@@ -1,8 +1,6 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from tag.models import Tag
 from .models import Recipe
-from collections import defaultdict
 from attr import attr
 from authors.validators import AuthorRecipeValidator
 
@@ -48,9 +46,19 @@ class RecipeSerializer(serializers.ModelSerializer):
     
     
     def validate(self, attrs):
+        if self.instance is not None and attrs.get('servings') is None:
+            attrs['servings'] = self.instance.servings
+        
+        if self.instance is not None and attrs.get('preparation_time') is None:
+            attrs['preparation_time'] = self.instance.preparation_time
+        
         super_validate = super().validate(attrs)
         AuthorRecipeValidator(
             data=attrs, 
             ErrorClass=serializers.ValidationError
         )
         return super_validate
+    
+    
+    def save(self, **kwargs):
+        return super().save(**kwargs)
