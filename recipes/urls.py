@@ -11,8 +11,6 @@ recipe_api_v2_router.register('recipes/api/v2', api.RecipeAPIv2ViewSet,)
 
 urlpatterns = recipe_api_v2_router
 
-print(recipe_api_v2_router.urls)
-
 urlpatterns = [
     path(
          '', 
