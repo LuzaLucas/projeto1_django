@@ -1,10 +1,11 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from tag.models import Tag
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
-from typing import Any
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from ..permissions import IsOwner
+from tag.models import Tag
 
 from ..serializers import TagSerializer, RecipeSerializer
 from ..models import Recipe
@@ -18,29 +19,61 @@ class RecipeAPIv2ViewSet(ModelViewSet):
     queryset = Recipe.objects.get_published() # type: ignore
     serializer_class = RecipeSerializer
     pagination_class = RecipeAPIv2Pagination
+    permission_classes = [IsAuthenticatedOrReadOnly,]
     
-    def get_serializer_class(self):
-        return super().get_serializer_class()
+    # def get_serializer(self, *args, **kwargs):
+    #     return super().get_serializer(*args, **kwargs)
     
-    def get_serializer(self, *args, **kwargs):
-        return super().get_serializer(*args, **kwargs)
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context["example"] = 'this is in context now'
+    #     return context
     
-    def get_context_data(self, **kwargs) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs) #type: ignore
-        context["example"] = 'new context bitches'
-        return context
-    
-    
-    def get_queryset(self):
-        qs = super().get_queryset()
+    # def get_queryset(self):
+    #     qs = super().get_queryset()
+    #     category_id = self.request.query_params.get('category_id', '')
+    #     if category_id != '' and category_id.isnumeric():
+    #         qs = qs.filter(category_id=category_id)
 
-        category_id = self.request.query_params.get('category_id', None) #type: ignore
-        
-        if category_id != '' and category_id.isnumeric():
-            qs = qs.filter(category_id=category_id)
-        
-        return qs
+    #     return qs
+    
+    def get_object(self):
+        pk = self.kwargs.get('pk', '')
 
+        obj = get_object_or_404(
+            self.get_queryset(),
+            pk=pk,
+        )
+
+        self.check_object_permissions(self.request, obj)
+        
+        return obj
+    
+    def get_permissions(self):
+        if self.request.method in ['PATCH', 'DELETE']:
+            return [IsOwner(),]
+        return super().get_permissions()
+    
+    # def list(self, request, *args, **kwargs):
+    #     print('REQUEST', request.user)
+    #     print(request.user.is_authenticated)
+    #     return super().list(request, *args, **kwargs)
+
+    # def partial_update(self, request, *args, **kwargs):
+    #     recipe = self.get_object()
+    #     serializer = RecipeSerializer(
+    #         instance=recipe,
+    #         data=request.data,
+    #         many=False,
+    #         context={'request': request},
+    #         partial=True,
+    #     )
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return Response(
+    #         serializer.data,
+    #     )
+    
 
 @api_view()
 def tag_api_detail(request, pk):
