@@ -4,9 +4,10 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from ..permissions import IsOwner
+from rest_framework import status
 from tag.models import Tag
 
+from ..permissions import IsOwner
 from ..serializers import TagSerializer, RecipeSerializer
 from ..models import Recipe
 
@@ -53,6 +54,17 @@ class RecipeAPIv2ViewSet(ModelViewSet):
         if self.request.method in ['PATCH', 'DELETE']:
             return [IsOwner(),]
         return super().get_permissions()
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=request.user)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, 
+            status=status.HTTP_201_CREATED, 
+            headers=headers
+        )
     
     # def list(self, request, *args, **kwargs):
     #     print('REQUEST', request.user)
