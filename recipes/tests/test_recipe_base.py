@@ -15,7 +15,7 @@ class RecipeMixin:
         password='123456',
         email='username@email.com',
     ):
-        return User.objects.create(
+        return User.objects.create_user(
             first_name=first_name,
             last_name=last_name,
             username=username,
