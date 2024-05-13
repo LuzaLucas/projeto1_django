@@ -22,7 +22,7 @@ class RegisterForm(forms.ModelForm):
         ),
         error_messages={
             'required': 'This field must not be empty',
-            'min_length': 'Username must have at leaset 4 characters',
+            'min_length': 'Username must have at least 4 characters',
             'max_length': 'Username must have less than 151 characters',
         },
         min_length=4, max_length=150,

@@ -8,7 +8,7 @@ app_name = 'authors'
 author_api_router = SimpleRouter()
 author_api_router.register('api', views.AuthorViewSet, basename='author-api')
 
-print(author_api_router.urls)
+# print(author_api_router.urls)
 
 urlpatterns = [
     path('register/', views.register_view, name="register"),
